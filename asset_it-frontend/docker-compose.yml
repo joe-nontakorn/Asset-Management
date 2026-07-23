@@ -1,0 +1,21 @@
+services:
+  web:
+    build: .
+    container_name: asset-it-frontend
+    ports:
+      - "8081:80"
+    env_file:
+      - .env
+    restart: always
+    networks:
+      - jastel-network
+    # เพิ่มส่วนนี้เพื่อจำกัดขนาด Log ไม่ให้บวมจนเต็ม Disk
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"    # จำกัด 10MB ต่อไฟล์
+        max-file: "3"      # เก็บสำรองไว้ 3 ไฟล์
+
+networks:
+  jastel-network:
+    external: true

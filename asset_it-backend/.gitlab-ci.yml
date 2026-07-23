@@ -1,0 +1,20 @@
+stages:
+  - deploy
+
+deploy-to-production:
+  stage: deploy
+  only:
+    - master
+  tags:
+    - runner-asset-b
+  script:
+    # Git configuration
+    - git config --global --add safe.directory /var/www/jastel-app/asset_it/asset_it-backend
+    - cd /var/www/jastel-app/asset_it/asset_it-backend
+    - git reset --hard
+    - git pull origin master
+    # Make wrapper script executable
+    - pm2 delete my-bun-app || true 
+    - pm2 start "bun run index.ts" --name my-bun-app 
+    - pm2 update
+    - pm2 save
